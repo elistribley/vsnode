@@ -1,19 +1,34 @@
+const { response } = require('express');
 const express = require('express');
+const { request } = require('http');
 
 
 const router = express.Router();
-// express passes in the request and response objects for us
+// Express passes in the request and response objects for us
 router.get('/getAll', (request, response) => {
     response.contentType('application/json') 
             .status(200)
-            // converts object to json and puts in the response body
+            // Converts object to json and puts in the response body
             .json(database); 
 });
 router.post('/create');
 router.put('/update');
-router.delete('/delete');
+router.delete('/delete/:id', (request, response, next) => {
+    const id = Number(request.params.id);
+    if (isNaN(id)) return next ({ statusCode:400, message: 'ID must be a number'});
 
-const app = express();
+
+    //find by id
+    const index = database.findIndex(function(turtle){
+            return turtle.id == id;
+    });
+
+});
+
+
+
+module.exports = router;
+//IN MEM DATA
 let idCounter = 3;
 const database = [
     {
@@ -35,4 +50,3 @@ const database = [
         born: new Date('1840-03-01')
     }
 ];
-module.exports = router;

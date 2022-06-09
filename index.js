@@ -14,6 +14,12 @@ const app = express();
 app.use(morgan('dev'));
 app.use('/turtle', turtleRouter);
 
+
+app.use(function( error, request, response, next){
+    response.status(error.statusCode || 500)
+            .send(error.message || "Something went wrong...");
+});
+
 app.listen(PORT, () => console.log('Up and running'));
 
 
